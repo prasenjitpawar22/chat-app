@@ -2,28 +2,37 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { socket } from "../../connect/config";
 
 interface ChatState {
-  msg: string[];
-  chat: string[];
+  msg: { message: string; id: string };
+  chat: { message: string | null; username: string | null }[];
 }
 
 const initialState: ChatState = {
-  // data:
-  msg: [""],
-  chat: [""],
+  msg: { message: "", id: "" },
+  chat: [{ message: null, username: null }],
 };
+
+export interface GetMsgAction {
+  message: string;
+  username: string;
+}
+export interface SendMsgAction {
+  message: string;
+  username: string;
+}
 
 export const chatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
-    sendMsg: (state, action: PayloadAction<string>) => {
+    sendMsg: (state, action: PayloadAction<SendMsgAction>) => {
       // state.msg = [...state.msg, action.payload];
       socket.emit("sendMsg", action.payload);
     },
-    getMsg: (state, action: PayloadAction<string>) => {
-      console.log("in get msg");
-
-      state.chat = [...state.chat, action.payload];
+    getMsg: (state, action: PayloadAction<GetMsgAction>) => {
+      state.chat.push({
+        message: action.payload.message,
+        username: action.payload.username,
+      });
     },
   },
 });

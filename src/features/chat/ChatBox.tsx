@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { Box, Button, Paper, TextField } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send'
+import { nanoid } from 'nanoid';
 
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { getMsg, sendMsg } from './chatSlice';
+import { getMsg, GetMsgAction, sendMsg, SendMsgAction } from './chatSlice';
 import useStyles from './styles';
 import { socket } from '../../connect/config';
 
-
+const id = nanoid(4)
 
 const ChatBox: React.FC = () => {
     const dispatch = useAppDispatch()
-
     const classes = useStyles()
     const chat = useAppSelector((state) => state.chat.chat)
     const msg = useAppSelector((state) => state.chat.msg)
@@ -21,13 +21,16 @@ const ChatBox: React.FC = () => {
 
     const onSendMsg = (e: React.FormEvent) => {
         e.preventDefault()
-        dispatch(sendMsg(msgInput))
+        // console.log(id);
+        // socket.emit('sendMsg', { message: msgInput, id })
+        dispatch(sendMsg({ message: msgInput, username: id }))
+        console.log('this is chat box', chat)
     }
 
     useEffect(() => {
-        // console.log('om');
-        console.log(chat)
-        socket.on("chat", (payload: string) => {
+        socket.on("chat", (payload: GetMsgAction) => {
+            console.log(payload, 'from server chhat');
+
             dispatch(getMsg(payload))
         });
     }, [msg]);
@@ -36,11 +39,15 @@ const ChatBox: React.FC = () => {
         <Box component={"div"} className={classes.container} >
             <Paper elevation={24} className={classes.containerPaper} >
                 {/* {chatLogs} */}
-                <div className={classes.chatBoxLeft}>
+                {<div className={classes.chatBoxLeft}>
                     {chat?.map((items, index) => {
-                        return <span key={index}> {items} </span>
+                        return items?.message === null ? ''
+                            : <div className={classes.chatWrapper}>
+                                <span className={classes.chatUsername} > {items.username} </span>
+                                <span className={classes.chat} key={index}>{items?.message}</span>
+                            </div>
                     })}
-                </div>
+                </div>}
                 {/* <div className={classes.chatBoxRight}>
                     {msg?.map((items, index) => {
                         return <p key={index}> {items} </p>
