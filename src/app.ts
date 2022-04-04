@@ -1,6 +1,7 @@
 import express = require("express");
 import { createServer } from "http";
 import { Server } from "socket.io";
+
 import {
   ClientToServerEvents,
   InterServerEvents,
@@ -24,9 +25,10 @@ const io = new Server<
 io.on("connection", (socket) => {
   socket.on("sendMsg", (payload) => {
     console.log(payload);
+
     io.emit("chat", payload);
   });
-  // console.log("what is socket", socket.id);
+  // console.log("what is socket id:", socket.id);
 });
 
 server.listen(3100, () => console.log("lsting on port 3100"));
