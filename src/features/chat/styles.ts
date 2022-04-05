@@ -2,20 +2,13 @@ import { makeStyles } from "@mui/styles";
 import { style } from "@mui/material/node_modules/@mui/system";
 
 const useStyles = makeStyles({
-  container: {
-    display: "flex",
-    flex: 1,
-    overflow: "auto",
-    flexDirection: "column",
-    width: 700,
-    height: 500,
-  },
   containerPaper: {
     backgroundColor: "#C73EA6",
     flex: 1,
     display: "flex",
     overflow: "auto",
-    height: "450px",
+    width: "calc(100%)",
+    height: "calc(100vh - 100px)",
     minHeight: "min-content" /* needs vendor prefixes */,
     "&.css-17vsgdu-MuiPaper-root": {
       backgroundColor: "#C73EA6",
