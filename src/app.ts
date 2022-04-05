@@ -2,6 +2,8 @@ import express = require("express");
 import { createServer } from "http";
 import { Server } from "socket.io";
 
+const port = process.env.PORT || 5000;
+
 import {
   ClientToServerEvents,
   InterServerEvents,
@@ -31,4 +33,4 @@ io.on("connection", (socket) => {
   // console.log("what is socket id:", socket.id);
 });
 
-server.listen(3100, () => console.log("lsting on port 3100"));
+server.listen(port, () => console.log("lsting on port", port));
